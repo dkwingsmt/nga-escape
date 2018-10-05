@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 import _ from 'lodash';
+import SVGInline from 'react-svg-inline';
+
+import GithubIcon from 'simple-icons/icons/github';
 
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,13 +16,25 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import { Button } from '@material-ui/core';
 
+import packageJson from '../package.json';
+
 const jssClasses = () => ({
   textField: {
     width: '100%',
   },
 
   textFieldInput: {
-    minHeight: '5em',
+    maxHeight: '20em',
+  },
+
+  toolbarTitle: {
+    flexGrow: 1,
+  },
+
+  icon: {
+    height: 24,
+    width: 24,
+    fill: 'white',
   },
 
   body: {
@@ -31,6 +47,14 @@ const jssClasses = () => ({
     display: 'flex',
     justifyContent: 'flex-end',
     margin: '10px 20px',
+  },
+
+  description: {
+    maxWidth: 512,
+    margin: 'auto',
+    marginTop: 30,
+    padding: 20,
+    border: '1px solid #eee',
   },
 });
 
@@ -105,9 +129,25 @@ class App extends Component {
       <div className="App">
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="title" color="inherit">
-              NGA Escape
+            <Typography
+              variant="title"
+              color="inherit"
+              className={classes.toolbarTitle}
+            >
+              NGA特殊符号转换器
             </Typography>
+
+            <IconButton
+              aria-label="GitHub"
+              href={packageJson.repository.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SVGInline
+                svg={GithubIcon.svg}
+                className={classes.icon}
+              />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Grid container className={classes.body}>
@@ -115,6 +155,9 @@ class App extends Component {
             fullWidth
           >
             <TextField
+              inputProps={{
+                className: classes.textFieldInput,
+              }}
               multiline
               className={classes.textField}
               label="转换前"
@@ -135,6 +178,7 @@ class App extends Component {
             <TextField
               inputProps={{
                 ref: this.convertedInput,
+                className: classes.textFieldInput,
               }}
               readOnly
               multiline
@@ -144,7 +188,27 @@ class App extends Component {
               value={convertedText}
             />
           </FormControl>
+          <div className={classes.description}>
+            <Typography variant="title" gutterBottom>
+              说明
+            </Typography>
+            <Typography>
+              本工具用于将 bbs.nga.com 会自动隐藏的特殊符号转换为 HTML 编码的形式。
+            </Typography>
+            <Typography>
+              本工具只会转换选定范围的字符。如想新增范围，请至
+              <a
+                href="https://github.com/dkwingsmt/nga-escape/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                这里
+              </a>
+              提出。
+            </Typography>
+          </div>
         </Grid>
+
       </div>
     );
   }

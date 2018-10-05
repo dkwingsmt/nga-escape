@@ -2,6 +2,10 @@
   "name": "nga-escape",
   "version": "0.1.0",
   "homepage": "http://tong.mu/nga-escape",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/dkwingsmt/nga-escape"
+  },
   "dependencies": {
     "@material-ui/core": "^3.1.2",
     "keycode": "^2.2.0",
@@ -10,7 +14,9 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "2.0.4",
-    "reactstrap": "^6.4.0"
+    "react-svg-inline": "^2.1.1",
+    "reactstrap": "^6.4.0",
+    "simple-icons": "^1.9.4"
   },
   "scripts": {
     "start": "react-scripts start",
