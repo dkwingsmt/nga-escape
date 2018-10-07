@@ -259,7 +259,7 @@ class App extends Component {
             <Typography>
               本工具只会转换选定范围的字符。如想新增范围，请至
               <a
-                href="https://github.com/dkwingsmt/nga-escape/issues"
+                href="https://github.com/dkwingsmt/nga-escape/issues/new"
                 target="_blank"
                 rel="noopener noreferrer"
               >
