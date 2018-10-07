@@ -97,7 +97,7 @@ function escape(src, { squareBracketR }) {
     })
     .join('');
   if (squareBracketR) {
-    converted = converted.replace('[R]', '[[size=100%]R[/size]]');
+    converted = converted.replace('[R]', '[[size=100%][/size]R]');
   }
   return converted;
 }
