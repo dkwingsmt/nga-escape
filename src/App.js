@@ -70,7 +70,8 @@ function escape(src) {
     .map((c) => {
       if (
         between(c, '①', '⓿') ||
-        between(c, '←', '↙')
+        between(c, '←', '↙') ||
+        between(c, '〈', '】')
       ) {
         return `&#${c.charCodeAt(0)};`;
       }
