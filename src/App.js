@@ -87,7 +87,9 @@ function escape(src, { squareBracketR }) {
       if (
         between(c, '①', '⓿') ||
         between(c, '←', '↙') ||
-        between(c, '〈', '】')
+        between(c, '〈', '】') ||
+        between(c, '\u2500', '\u25FF') || // Geometry symbols
+        between(c, '\u2600', '\u26FF') // Miscellaneous symbols
       ) {
         return `&#${c.charCodeAt(0)};`;
       }
