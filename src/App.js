@@ -15,6 +15,10 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import { Button } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+
 
 import packageJson from '../package.json';
 
@@ -43,10 +47,22 @@ const jssClasses = () => ({
     marginTop: 20,
   },
 
-  buttons: {
+  mid: {
     display: 'flex',
-    justifyContent: 'flex-end',
     margin: '10px 20px',
+    width: '100%',
+  },
+
+  optionsContainer: {
+    flex: 1,
+  },
+
+  submitContainer: {
+    flex: '0 0 auto',
+  },
+
+  monospaceCheckboxLabel: {
+    fontFamily: 'monospace',
   },
 
   description: {
@@ -65,8 +81,8 @@ function between(cn, ca, cb) {
   return n >= a && n <= b;
 }
 
-function escape(src) {
-  return _(src)
+function escape(src, { squareBracketR }) {
+  let converted = _(src)
     .map((c) => {
       if (
         between(c, '①', '⓿') ||
@@ -78,6 +94,10 @@ function escape(src) {
       return c;
     })
     .join('');
+  if (squareBracketR) {
+    converted = converted.replace('[R]', '[[size=100%]R[/size]]');
+  }
+  return converted;
 }
 
 class App extends Component {
@@ -86,6 +106,9 @@ class App extends Component {
     this.state = {
       originalText: '',
       convertedText: '',
+      options: {
+        squareBracketR: true,
+      },
     };
     this.convertedInput = React.createRef();
 
@@ -110,9 +133,19 @@ class App extends Component {
     });
   }
 
+  onOptionCheckboxChange(key) {
+    return (evt, checked) => {
+      this.setState(({ options }) => ({
+        options: Object.assign({},
+          options,
+          { [key]: !!checked }),
+      }));
+    };
+  }
+
   doConvert() {
-    this.setState(({ originalText }) => ({
-      convertedText: escape(originalText),
+    this.setState(({ originalText, options }) => ({
+      convertedText: escape(originalText, options),
     }), () => {
       if (this.convertedInput.current) {
         const ref = this.convertedInput.current;
@@ -120,6 +153,24 @@ class App extends Component {
         ref.select();
       }
     });
+  }
+
+  renderOptionCheckbox(key) {
+    const { classes } = this.props;
+    return (
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={this.state.options[key] || false}
+            onChange={this.onOptionCheckboxChange(key)}
+          />
+        }
+        label="[R]"
+        classes={{
+          label: classes.monospaceCheckboxLabel,
+        }}
+      />
+    );
   }
 
   render() {
@@ -152,43 +203,50 @@ class App extends Component {
           </Toolbar>
         </AppBar>
         <Grid container className={classes.body}>
-          <FormControl
-            fullWidth
-          >
-            <TextField
-              inputProps={{
-                className: classes.textFieldInput,
-              }}
-              multiline
-              className={classes.textField}
-              label="转换前"
-              placeholder="在这里输入你想要转换的文字……"
-              value={originalText}
-              onChange={this.onChange}
-              onKeyDown={this.onKeyDown}
-            />
-            <div className={classes.buttons}>
+          <TextField
+            inputProps={{
+              className: classes.textFieldInput,
+            }}
+            variant="outlined"
+            multiline
+            className={classes.textField}
+            label="转换前"
+            placeholder="在这里输入你想要转换的文字……"
+            value={originalText}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
+          />
+          <div className={classes.mid}>
+            <FormControl component="fieldset" className={classes.optionsContainer}>
+              <FormLabel component="legend">特别转换项</FormLabel>
+              {this.renderOptionCheckbox('squareBracketR')}
+            </FormControl>
+            <div className={classes.submitContainer}>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={this.onClick}
+                classes={{
+
+                }}
               >
                 {'转换（Ctrl-回车）'}
               </Button>
             </div>
-            <TextField
-              inputProps={{
-                ref: this.convertedInput,
-                className: classes.textFieldInput,
-              }}
-              readOnly
-              multiline
-              className={classes.textField}
-              label="转换后"
-              placeholder="这里将显示转换后的文字"
-              value={convertedText}
-            />
-          </FormControl>
+          </div>
+          <TextField
+            inputProps={{
+              ref: this.convertedInput,
+              className: classes.textFieldInput,
+            }}
+            readOnly
+            variant="outlined"
+            multiline
+            className={classes.textField}
+            label="转换后"
+            placeholder="这里将显示转换后的文字"
+            value={convertedText}
+          />
           <div className={classes.description}>
             <Typography variant="title" gutterBottom>
               说明
